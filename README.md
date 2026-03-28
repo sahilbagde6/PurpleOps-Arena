@@ -8,8 +8,6 @@
 
 ---
 
-# PurpleOps Arena 🚀
-
 ## Features
 - Attack Simulation
 - Detection System
@@ -37,7 +35,19 @@ PurpleOps Arena is a full-stack cybersecurity platform that integrates offensive
 
 ---
 
-## Quick start
+## 📸 Screenshots
+
+<img width="1184" height="553" alt="Screenshot 2026-03-28 163131" src="https://github.com/user-attachments/assets/b1a32f93-1ab8-4c35-8fdb-4e0554269058" />
+
+<img width="1916" height="994" alt="Screenshot 2026-03-28 163212" src="https://github.com/user-attachments/assets/d7affdb6-9cb1-40db-ad31-fb655c6c9cf8" />
+
+<img width="1919" height="993" alt="Screenshot 2026-03-28 163234" src="https://github.com/user-attachments/assets/9e4aad84-949e-431a-a452-a50372e7e8e2" />
+
+<img width="1919" height="988" alt="Screenshot 2026-03-28 163303" src="https://github.com/user-attachments/assets/64f14167-ca85-405c-b009-c9576bfde110" />
+
+<img width="1919" height="992" alt="Screenshot 2026-03-28 163338" src="https://github.com/user-attachments/assets/718d5e76-3a99-4a9f-9a3c-6a52d207d1b7" />
+
+
 
 ### Prerequisites
 
