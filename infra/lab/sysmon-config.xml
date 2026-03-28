@@ -1,0 +1,110 @@
+<Sysmon schemaversion="4.90">
+  <HashAlgorithms>md5,sha256,IMPHASH</HashAlgorithms>
+  <CheckRevocation>False</CheckRevocation>
+  <EventFiltering>
+
+    <!-- Event ID 1: Process Creation -->
+    <RuleGroup name="" groupRelation="or">
+      <ProcessCreate onmatch="include">
+        <Rule name="Suspicious Tools" groupRelation="or">
+          <Image condition="end with">mimikatz.exe</Image>
+          <Image condition="end with">psexec.exe</Image>
+          <Image condition="end with">psexec64.exe</Image>
+          <Image condition="end with">procdump.exe</Image>
+          <Image condition="end with">PrintSpoofer.exe</Image>
+          <Image condition="end with">JuicyPotato.exe</Image>
+          <Image condition="end with">RoguePotato.exe</Image>
+          <Image condition="end with">nc.exe</Image>
+          <Image condition="end with">ncat.exe</Image>
+        </Rule>
+        <Rule name="PowerShell Encoded" groupRelation="and">
+          <Image condition="end with">powershell.exe</Image>
+          <CommandLine condition="contains">-EncodedCommand</CommandLine>
+        </Rule>
+        <Rule name="PowerShell Download" groupRelation="and">
+          <Image condition="end with">powershell.exe</Image>
+          <CommandLine condition="contains">DownloadString</CommandLine>
+        </Rule>
+        <Rule name="Living Off The Land" groupRelation="or">
+          <Image condition="end with">certutil.exe</Image>
+          <Image condition="end with">bitsadmin.exe</Image>
+          <Image condition="end with">mshta.exe</Image>
+          <Image condition="end with">regsvr32.exe</Image>
+          <Image condition="end with">rundll32.exe</Image>
+          <Image condition="end with">wscript.exe</Image>
+          <Image condition="end with">cscript.exe</Image>
+        </Rule>
+        <Rule name="CMD Spawn" groupRelation="and">
+          <ParentImage condition="end with">WINWORD.EXE</ParentImage>
+          <Image condition="end with">cmd.exe</Image>
+        </Rule>
+        <Rule name="Scheduled Task Creation" groupRelation="and">
+          <Image condition="end with">schtasks.exe</Image>
+          <CommandLine condition="contains">/create</CommandLine>
+        </Rule>
+      </ProcessCreate>
+    </RuleGroup>
+
+    <!-- Event ID 3: Network Connection -->
+    <RuleGroup name="" groupRelation="or">
+      <NetworkConnect onmatch="include">
+        <Rule name="Suspicious Outbound" groupRelation="or">
+          <Image condition="end with">powershell.exe</Image>
+          <Image condition="end with">cmd.exe</Image>
+          <Image condition="end with">mshta.exe</Image>
+          <Image condition="end with">wscript.exe</Image>
+          <DestinationPort condition="is">4444</DestinationPort>
+          <DestinationPort condition="is">1337</DestinationPort>
+          <DestinationPort condition="is">9001</DestinationPort>
+        </Rule>
+      </NetworkConnect>
+    </RuleGroup>
+
+    <!-- Event ID 7: Image Loaded -->
+    <RuleGroup name="" groupRelation="or">
+      <ImageLoad onmatch="include">
+        <Rule name="Credential Access DLLs" groupRelation="or">
+          <ImageLoaded condition="end with">wdigest.dll</ImageLoaded>
+          <ImageLoaded condition="end with">lsasrv.dll</ImageLoaded>
+          <ImageLoaded condition="end with">cryptdll.dll</ImageLoaded>
+          <Signed condition="is">false</Signed>
+        </Rule>
+      </ImageLoad>
+    </RuleGroup>
+
+    <!-- Event ID 10: ProcessAccess (CRITICAL for LSASS detection) -->
+    <RuleGroup name="" groupRelation="or">
+      <ProcessAccess onmatch="include">
+        <Rule name="LSASS Access" groupRelation="or">
+          <TargetImage condition="end with">lsass.exe</TargetImage>
+        </Rule>
+      </ProcessAccess>
+    </RuleGroup>
+
+    <!-- Event ID 11: File Create -->
+    <RuleGroup name="" groupRelation="or">
+      <FileCreate onmatch="include">
+        <Rule name="Suspicious File Drop" groupRelation="or">
+          <TargetFilename condition="end with">.exe</TargetFilename>
+          <TargetFilename condition="end with">.dll</TargetFilename>
+          <TargetFilename condition="end with">.ps1</TargetFilename>
+          <TargetFilename condition="contains">Temp</TargetFilename>
+          <TargetFilename condition="contains">AppData</TargetFilename>
+        </Rule>
+      </FileCreate>
+    </RuleGroup>
+
+    <!-- Event ID 12/13: Registry -->
+    <RuleGroup name="" groupRelation="or">
+      <RegistryEvent onmatch="include">
+        <Rule name="Persistence Registry Keys" groupRelation="or">
+          <TargetObject condition="contains">CurrentVersion\Run</TargetObject>
+          <TargetObject condition="contains">CurrentVersion\RunOnce</TargetObject>
+          <TargetObject condition="contains">CurrentVersion\Winlogon</TargetObject>
+          <TargetObject condition="contains">Services\</TargetObject>
+        </Rule>
+      </RegistryEvent>
+    </RuleGroup>
+
+  </EventFiltering>
+</Sysmon>

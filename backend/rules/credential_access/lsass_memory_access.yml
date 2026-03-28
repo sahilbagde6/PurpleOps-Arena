@@ -1,0 +1,36 @@
+title: LSASS Memory Access via Suspicious Process
+id: sigma-lsass-001
+status: stable
+description: Detects suspicious process accessing LSASS memory, indicative of credential dumping
+author: PurpleOps Arena
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+tags:
+  - attack.credential_access
+  - attack.t1003.001
+logsource:
+  category: process_access
+  product: windows
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess|contains:
+      - '0x1fffff'
+      - '0x1010'
+      - '0x143a'
+  filter_legit:
+    SourceImage|contains:
+      - 'C:\Windows\System32\svchost.exe'
+      - 'C:\Windows\System32\werfault.exe'
+      - 'C:\Windows\System32\taskmgr.exe'
+  condition: selection and not filter_legit
+falsepositives:
+  - Security products
+  - Antivirus software
+level: critical
+fields:
+  - SourceImage
+  - TargetImage
+  - GrantedAccess
+  - CallTrace

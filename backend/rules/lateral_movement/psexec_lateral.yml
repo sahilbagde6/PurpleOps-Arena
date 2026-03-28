@@ -1,0 +1,35 @@
+title: PsExec Lateral Movement Detection
+id: sigma-psexec-001
+status: stable
+description: Detects lateral movement via PsExec by identifying the PSEXESVC service creation
+author: PurpleOps Arena
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1021/002/
+tags:
+  - attack.lateral_movement
+  - attack.t1021.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_service:
+    Image|endswith: '\PSEXESVC.exe'
+  selection_named_pipe:
+    PipeName|contains: '\psexecsvc'
+  selection_cmdline:
+    CommandLine|contains:
+      - 'psexec'
+      - 'paexec'
+    CommandLine|contains:
+      - ' \\\\* '
+      - ' -s '
+  condition: selection_service or selection_named_pipe or selection_cmdline
+falsepositives:
+  - Legitimate administrator use of PsExec
+level: high
+fields:
+  - Image
+  - CommandLine
+  - TargetHostname
+  - User

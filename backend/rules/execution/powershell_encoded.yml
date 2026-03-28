@@ -1,0 +1,37 @@
+title: PowerShell Encoded Command Execution
+id: sigma-ps-001
+status: stable
+description: Detects PowerShell execution with encoded command parameter, often used for obfuscation
+author: PurpleOps Arena
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense_evasion
+  - attack.t1027
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+    CommandLine|contains:
+      - ' -EncodedCommand '
+      - ' -enc '
+      - ' -EC '
+  filter_length:
+    CommandLine|re: '^.{0,200}$'
+  condition: selection and not filter_length
+falsepositives:
+  - Administrative scripts
+  - Software deployment tools
+level: high
+fields:
+  - Image
+  - CommandLine
+  - ParentImage
+  - User

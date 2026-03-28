@@ -1,0 +1,34 @@
+title: Token Impersonation via SeImpersonatePrivilege
+id: sigma-token-001
+status: experimental
+description: Detects token impersonation attacks commonly used for privilege escalation
+author: PurpleOps Arena
+date: 2024/01/01
+references:
+  - https://attack.mitre.org/techniques/T1134/
+tags:
+  - attack.privilege_escalation
+  - attack.t1134
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_tools:
+    Image|endswith:
+      - '\PrintSpoofer.exe'
+      - '\RoguePotato.exe'
+      - '\JuicyPotato.exe'
+      - '\GodPotato.exe'
+  selection_privilege:
+    CommandLine|contains:
+      - 'SeImpersonatePrivilege'
+      - 'SeAssignPrimaryTokenPrivilege'
+  condition: selection_tools or selection_privilege
+falsepositives:
+  - Legitimate privilege management tools
+level: critical
+fields:
+  - Image
+  - CommandLine
+  - ParentImage
+  - User
