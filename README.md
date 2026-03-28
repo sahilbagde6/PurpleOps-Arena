@@ -8,6 +8,21 @@
 
 ---
 
+# PurpleOps Arena 🚀
+
+## Features
+- Attack Simulation
+- Detection System
+- AI Analysis
+
+## Setup
+1. Clone repo
+2. Install dependencies
+3. Run project
+
+## Author
+Sahil Bagde
+
 ## Overview
 
 PurpleOps Arena is a full-stack cybersecurity platform that integrates offensive attack simulation, defensive detection engineering, and AI-powered analysis into a single guided workflow.
